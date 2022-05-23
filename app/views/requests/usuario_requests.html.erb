@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Solicitudes Pendientes</h1>
+
+
+<table>
+<thead>
+  <tr>
+    <th>Usuario</th>
+    <th>Descripción</th>
+    <th colspan="3"></th>
+  </tr>
+</thead>
+
+<tbody>
+  <% @requests.each do |request| %>
+    <tr>
+        <% if current_user == request.turno.owner  and request%>
+        <td><%= request.user.username %></td>
+        <td><%= request.description %></td>
+        <td><%= link_to 'Aceptar', add_member_path(:parametros => {:request => request, :turno => request.turno.id, :new_member => request.user.id}) %></td>
+        <td><%= link_to 'Rechazar', request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+
+
+<br>
+
+<%= link_to 'Volver', turnos_path, method: :get%>

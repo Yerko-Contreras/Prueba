@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reviews</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sender</th>
+      <th>Receiver</th>
+      <th>Puntuación</th>
+      <th>Contenido</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reviews.each do |review| %>
+      <tr>
+        <td><%= review.user.username %></td>
+        <td><%= review.receiver.username %></td>
+        <td><%= review.score %></td>
+        <td><%= review.content %></td>
+        <td><%= link_to 'Show', review %></td>
+        <td><%= link_to 'Destroy', review, method: :delete, data: { confirm: '¿Estas Segur@?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Nueva Reseña', new_review_path %>
+<%= link_to 'Volver', homepages_path, method: :get%>

@@ -1,0 +1,201 @@
+<p id="notice"><%= notice %></p>
+<%if not user_signed_in?%>
+    <h1>Turnos Disponibles</h1>
+    <h4>Si te inscribes podrás acceder a todos estos turnos :)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Dirección llegada</th>
+          <th>Dirección salida</th>
+          <th>Capacidad</th>
+          <th>Route</th>
+          <th>Día</th>
+          <th>Hora de salida</th>
+          <th>Chofer</th>
+          <th>Cupos ocupados</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @turnos.each do |turno| %>
+          <tr>
+            <td><%= turno.address_in %></td>
+            <td><%= turno.address_out %></td>
+            <td><%= turno.capacity %></td>
+            <td><%= turno.route %></td>
+            <td><%= turno.day %></td>
+            <td><%= turno.hour %></td>
+            <td><%= turno.owner.username %></td>
+            <td><%= turno.cupos_ocupados %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+<%end%>
+
+<%if user_signed_in?%>
+  <%count = 0 %>
+  <%if not current_user.admin%>
+      <%@turnos.each do |turno|%>
+          <%if turno.owner.id == current_user.id%>
+              <%count += 1%>
+          <%end%>
+       
+  <%end%>
+      <% if current_user.banned%>
+        <h2><strong>Estas banead@ por un administrador, no podrás crear ni unirte a turnos</strong></h2>
+      <% end %>
+      <h1>Turnos Disponibles</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Dirección llegada</th>
+            <th>Dirección salida</th>
+            <th>Capacidad</th>
+            <th>Route</th>
+            <th>Día</th>
+            <th>Hora</th>
+            <th>Chofer</th>
+            <th>Cupos ocupados</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @turnos.each do |turno| %>
+            <tr>
+              <% if user_signed_in? and current_user.id != turno.owner.id %>
+              <td><%= turno.address_in %></td>
+              <td><%= turno.address_out %></td>
+              <td><%= turno.capacity %></td>
+              <td><%= turno.route %></td>
+              <td><%= turno.day %></td>
+              <td><%= turno.hour %></td>
+              <td><%= turno.owner.username %></td>
+              <td><%= turno.cupos_ocupados %></td>
+              <% unless turno.users.include?(current_user) %>
+                <% unless turno.cupos_ocupados == turno.capacity%>
+                <% aux = true%>
+                <% turno.requests.each do |request| %>
+                  <% if current_user == request.user %>
+                      <%= aux = false %></td>
+                  <%end%>
+                <%end%>
+                <%if aux%>
+                <% unless current_user.banned %>
+                  <td><%= link_to 'Unirse', new_request_path(:request => {:turno_id => turno.id})%></td>
+                <% end %>
+                <%end%>
+                <% end %>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+
+        
+
+      <%if count >= 1%>
+
+          <h1>Mis Turnos</h1>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Dirección llegada</th>
+                <th>Dirección salida</th>
+                <th>Capacidad</th>
+                <th>Route</th>
+                <th>Día</th>
+                <th>Hora de salida</th>
+                <th>Chofer</th>
+                <th>Cupos Ocupados</th>
+                <th colspan="3"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @turnos.each do |turno| %>
+                <tr>
+                  <% if user_signed_in? and current_user.id == turno.owner.id %>
+                  <td><%= turno.address_in %></td>
+                  <td><%= turno.address_out %></td>
+                  <td><%= turno.capacity %></td>
+                  <td><%= turno.route %></td>
+                  <td><%= turno.day %></td>
+                  <td><%= turno.hour %></td>
+                  <td><%= turno.owner.username %></td>
+                  <td><%= turno.cupos_ocupados %></td>
+                  <td><%= link_to 'Ver Detalles', turno %></td> 
+                  <% if turno.cupos_ocupados.to_i == 0%>
+                  <td><%= link_to 'Editar', edit_turno_path(turno) %></td>
+                  <% end %>
+                  <td><%= link_to 'Eliminar', turno, method: :delete, data: { confirm: 'Estas segur@?' } %></td>
+                  <% if turno.users.include?(current_user)%>
+                    <td><%= link_to 'Entrar a la Sala de Chat', chat_room_path(:turno => {:id => turno.id})%></td>
+                  <% end %>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+      <%end%>
+
+  <%end%>
+  <%end%>
+
+<%if user_signed_in?%>
+<%if current_user.admin%>
+  <h1>Todos los Turnos</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Dirección llegada</th>
+              <th>Dirección salida</th>
+              <th>Capacidad</th>
+              <th>Route</th>
+              <th>Día</th>
+              <th>Hora de salida</th>
+              <th>Chofer</th>
+              <th>Cupos Ocupados</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @turnos.each do |turno| %>
+              <tr>
+                <td><%= turno.address_in %></td>
+                <td><%= turno.address_out %></td>
+                <td><%= turno.capacity %></td>
+                <td><%= turno.route %></td>
+                <td><%= turno.day %></td>
+                <td><%= turno.hour %></td>
+                <td><%= turno.owner.username %></td>
+                <td><%= turno.cupos_ocupados %></td>
+                <td><%= link_to 'Show', turno %></td> 
+                <td><%= link_to 'Edit', edit_turno_path(turno) %></td>
+                <td><%= link_to 'Destroy', turno, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to 'Entrar a la Sala de Chat', chat_room_path(:turno => {:id => turno.id})%></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+<%end%>
+<%end%>
+<br>
+
+<% if user_signed_in? %>
+  <% unless current_user.banned%>
+    <%= link_to 'Crear Turno', new_turno_path %>
+  <% end %>
+  <%= link_to 'Ver Turnos inscritos', turnos_inscribed_path, method: :get%>
+  <%= link_to 'Volver', homepages_path, method: :get%>
+<% else %>
+      <%= link_to 'Volver', new_user_session_url%>
+<% end %>

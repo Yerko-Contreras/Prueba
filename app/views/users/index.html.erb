@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nombre</th>
+      <th>Dirección</th>
+      <th>Correo</th>
+      <th>Telefono</th>
+      <th>Baneado?</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <% unless user == current_user%>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.username %></td>
+        <td><%= user.address %></td>
+        <td><%= user.email %></td>
+        <td><%= user.phone %></td>
+        <td><%= user.banned %></td>
+        <td><%= link_to 'Eliminar Usuario', user, method: :delete, data: { confirm: 'Are you sure?' }, :title => "Delete #{user.username}" %></td>
+        <td><%= link_to 'Ver reseñas', admin_user_reviews_path(:user => {:user_id => user.id}) %></td>
+        <% unless user.banned%>
+          <td><%= link_to 'Banear Usuario', ban_user_path(:user => {:user_id => user.id}), data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+        <% if user.banned%>
+          <td><%= link_to 'Remover Ban Usuario', unban_user_path(:user => {:user_id => user.id}), data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Volver', homepages_path, method: :get%>
+
+<br>

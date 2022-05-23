@@ -1,0 +1,43 @@
+<body>
+    <center>
+    <h1>Pagina Principal</h1>
+    <% if user_signed_in? %>
+      <%= link_to 'Mis Reseñas', mis_resenas_path, method: :get%>
+      <%= link_to 'Solicitudes realizadas', my_requests_path, method: :get%>
+      <footer>
+        <%unless current_user.admin %>
+          <ul><%= image_tag(current_user.avatar_thumbnail) %></ul>
+        <%end%>
+        <ul><%= current_user.username %></ul>
+        <ul><strong><%= link_to 'Ver turnos', turnos_path, method: :get%></strong></ul>
+        <% if user_signed_in? %>
+            <%= link_to 'Cerrar Sesion', destroy_user_session_path, method: :delete %>
+            <%= link_to 'Editar Perfil', edit_user_registration_path, method: :get%>
+        <%end %>
+      </footer>
+    </center>
+    <% end %>
+
+    <% if user_signed_in? %>
+    <% if current_user.admin%>
+        <table>
+          <thead>
+            <tr>
+              <th>Administrador</th>
+              <th colspan="1"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+              <tr>
+                  <td><%= link_to 'Ver Usuarios', users_path, method: :get %></td>
+                  <td><%= link_to 'Ver Turnos', turnos_path, method: :get %></td>
+                  <td><%= link_to 'Ver Reseñas', reviews_path, method: :get %></td>
+                  <td><%= link_to 'Ver Chats', chats_path, method: :get %></td>
+                  <td><%= link_to 'Ver Solicitudes', requests_path, method: :get %></td>
+              </tr>
+          </tbody>
+        </table>
+    <% end %>
+    <% end %>
+</body>

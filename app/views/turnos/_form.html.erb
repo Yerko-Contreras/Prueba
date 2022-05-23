@@ -1,0 +1,48 @@
+<%= form_with(model: turno, local: true) do |form| %>
+  <% if turno.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(turno.errors.count, "error") %> prohibited this turno from being saved:</h2>
+
+      <ul>
+        <% turno.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label "Comuna/Campus de Llegada" %>
+    <%= form.text_field :address_in %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Comuna/Campus de Salida" %>
+    <%= form.text_field :address_out %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Capacidad" %>
+    <%= form.number_field :capacity %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Ida o Vuelta" %>
+    <%= form.text_field :route %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Dia" %>
+    <%= form.text_field :day %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Hora de salida (formato: HH:MM)" %>
+    <%= form.text_field :hour %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

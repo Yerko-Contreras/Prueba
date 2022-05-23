@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @request.description %>
+</p>
+
+<%= link_to 'Edit', edit_request_path(:request => {:turno_id => @request.turno.id}) %> |
+<% if current_user == @request.user%>
+<%= link_to 'Back', my_requests_path %>
+<% else %>
+<%= link_to 'Back', turnos_path %>
+<% end %>

@@ -1,0 +1,83 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Detalles del Turno</h1>
+<p>
+  <strong>Dirección llegada:</strong>
+  <%= @turno.address_in %>
+</p>
+
+<p>
+  <strong>Dirección salida:</strong>
+  <%= @turno.address_out %>
+</p>
+
+<p>
+  <strong>Capacidad:</strong>
+  <%= @turno.capacity %>
+</p>
+
+<p>
+  <strong>Cupos ocupados:</strong>
+  <%= @turno.cupos_ocupados %>
+</p>
+
+<p>
+  <strong>Route:</strong>
+  <%= @turno.route %>
+</p>
+
+<p>
+  <strong>Día:</strong>
+  <%= @turno.day %>
+</p>
+
+<p>
+  <strong>Hora de salida:</strong>
+  <%= @turno.hour %>
+</p>
+
+<p>
+  <strong>Chofer:</strong>
+  <%= @turno.owner.username %>
+</p>
+
+<p>
+  <table>
+  <thead>
+    <tr>
+      <th>Pasajeros</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @turno.users.each do |user| %>
+      <tr>
+        <% unless user == @turno.owner%>
+          <td><%= user.username %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</p>
+
+<% if @turno.owner == current_user%>
+  <%if @turno.users.length <= 1%>
+    |<%= link_to 'Edit', edit_turno_path(@turno) %>|
+  <%end%>
+<% end %>
+
+<% if current_user.id == @turno.user_id %>
+  <%= link_to 'Ver Solicitudes', usuario_requests_path(:turno => {:id => @turno.id}) %>|
+<% end %>
+
+<% if @turno.users.include?(current_user)%>
+  <%= link_to 'Entrar a la Sala de Chat', chat_room_path(:turno => {:id => @turno.id})%>
+<% end %>
+
+<% if current_user == @turno.owner%>
+  |<%= link_to 'Eliminar turno', @turno, method: :delete, data: { confirm: 'Are you sure?' } %>
+<% end %>
+
+|<%= link_to 'Back', turnos_path %>|
